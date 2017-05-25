@@ -1,0 +1,9 @@
+div(id="song-section" class="container-fluid")
+    div(class="col-md-8" data-bind="visible: song")
+        h2
+            span(data-bind="text: songViewModel.songTitle")
+            small(data-bind="text: songViewModel.songSubTitle")
+        select(data-bind="value: songViewModel.newKey, options: songViewModel.keyOptions")
+        
+        div(id="song" data-bind="foreach: songViewModel.formattedSong")
+            div(class="song-section" data-bind="html: data, css: { 'song-chorus': type === 'chorus' }")

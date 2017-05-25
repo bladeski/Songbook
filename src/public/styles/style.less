@@ -1,0 +1,166 @@
+@primary-colour: rgb(199, 252, 100);
+@border-colour: rgb(238, 255, 206);
+@border-colour-active: rgb(206, 232, 157);
+@primary-link-colour: rgb(96, 147, 0);
+@shadow-colour: rgb(201, 201, 201);
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: @primary-link-colour;
+}
+
+div {
+
+    &#menu {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        bottom: 0;
+        width: 250px;
+        padding-top: 5em;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 0;
+        background-color: @primary-colour;
+        z-index: 10;
+        box-shadow: 3px 3px 3px 0 @shadow-colour;
+
+        &.expand {
+            left: -0;
+        }
+
+        button {
+            padding: 10px;
+            background: none;
+            border: 1px solid @border-colour;
+
+            &:hover {
+                border: 1px solid @border-colour-active;
+                background-color: @border-colour-active;
+            }
+
+            &:active {
+                outline: none;
+            }
+
+            &:focus {
+                outline: 0;
+                outline-style: none;
+            }
+
+            &.menu-button {
+                position: absolute;
+                top: 0;
+                right: -59px;
+                width: 60px;
+                border-color: @primary-colour;
+                background-color: @primary-colour;
+                box-shadow: 3px 3px 3px 0 @shadow-colour;
+
+                &:hover {
+                    border: 1px solid @border-colour-active;
+                    background-color: @border-colour-active;
+                }
+            }
+        }
+
+        div.songlist {
+
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+
+            ul {
+                padding-left: 0;
+
+                li {
+                    list-style: none;
+                    margin-top: 10px;
+                    position: relative;
+                    padding-top: 5px;
+
+                    h2 {
+                        margin-top: 5px;
+                    }
+
+                    button {
+                        width: 100%;
+                        text-align: left;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        &.expand-letter {
+                            width: auto;
+                            padding: 10px;
+                            padding-top: 5px;
+                            position: absolute;
+                            top: 5px;
+                            right: 20px;
+                            padding-bottom: 5px;
+                        }
+                    }
+                }
+
+                &.songs {
+
+                    padding-left: 10px;
+                    padding-right: 20px;
+
+                    li {
+                        margin-top: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    &#song-section {
+
+        &.menu-expand {
+            padding-left: 250px;
+        }
+
+        h2 {
+            small {
+                color: @border-colour-active;
+                margin-left: 5px;
+            }
+        }
+    }
+
+    &#song {
+        margin-top: 20px;
+
+        div.song-chorus {
+            border-left: 4px @border-colour-active solid;
+            padding-left: 1em;
+            padding-top: 1.5em;
+        }
+
+        div.song-section {
+            margin-top: 15px;
+        }
+
+        p.song-line, div.song-line {
+            position: relative;
+            line-height: 2.5em;
+            margin-top: 2px;
+
+            span.chord {
+                position: absolute;
+                top: -0.5em;
+                font-weight: bold;
+                line-height: normal;
+            }
+
+            span.chord-space {
+                display: inline-block;
+            }
+        }
+    }
+}

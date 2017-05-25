@@ -1,0 +1,36 @@
+{
+    "name": "songbook",
+    "version": "0.1.0",
+    "description": "App for displaying chord sheets.",
+    "keywords": ["songbook"],
+    "repository": "https://github.com/bladeski/songbook.git",
+    "homepage": "https://github.com/bladeski/songbook",
+    "author": "Jonathan Blades <jonathan@flatlinemedia.co.uk>",
+    "scripts": {
+        "start": "node ./src/bin/www"
+    },
+    "dependencies": {
+        "gulp": "^3.9.1",
+        "gulp-install": "^1.1.0",
+        "gulp-run": "^1.7.1",
+        "del": "^2.2.2",
+        "express": "^4.15.2",
+        "socket.io": "^2.0.1",
+        "fs-plus": "^3.0.0",
+        "jquery": "^3.2.1",
+        "knockout": "^3.4.2",
+        "bootstrap": "^3.3.7",
+        "requirejs": "^2.3.3",
+        "body-parser": "^1.17.1",
+        "cookie-parser": "^1.4.3",
+        "debug": "^2.6.3",
+        "pug": "^2.0.0-beta.12",
+        "less-middleware": "^2.2.0",
+        "morgan": "^1.8.1",
+        "serve-favicon": "^2.4.2",
+        "font-awesome": "^4.7.0",
+        "perfect-scrollbar": "^0.7.0"
+    },
+    "main": "index",
+    "license": "MIT"
+}
