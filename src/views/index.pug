@@ -1,17 +1,13 @@
 extends layout
 
+block styles    
+    link(rel='stylesheet', href='/lib/perfect-scrollbar/css/perfect-scrollbar.min.css')
+
 block content
-    include sidebar.pug
+    include menu.pug
     
     include song.pug
         
-block scripts
-    //- script(type="text/html" id="song-template")
-    //-     h2
-    //-         span(data-bind="text: songTitle")
-    //-         small(data-bind="text: songSubTitle")
-    //-     select(data-bind="value: newKey, options: keyOptions")
-    //- 
-    //-     div(id="song" data-bind="html: formattedSong")
-    script(data-main="/scripts/main" src="/lib/requirejs/require.js")
+block scripts    
+    | require(['index'], function(index) {});
         

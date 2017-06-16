@@ -8,6 +8,15 @@ var app = require('../app');
 var debug = require('debug')('app:server');
 var http = require('http');
 
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * Get port from environment and store in Express.
  */
@@ -22,10 +31,14 @@ app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 io.on('connect', function(socket){
-    console.log('IO Connected');
 
     socket.on('Director Change Song', function (song) {
-        socket.broadcast.emit('Change Song', song);
+
+        if (isJson(song)) {
+            socket.broadcast.emit('Change Song', song);
+        } else {
+            console.log(song);
+        }
     });
 
     socket.on('disconnect', function () {

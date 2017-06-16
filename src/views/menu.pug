@@ -1,0 +1,11 @@
+div(id="menu")
+    button(class="menu-button fa fa-bars fa-3x" data-bind="click: menuViewModel.toggleMenu")
+    
+    div(class="songlist")
+        ul(data-bind="foreach: menuViewModel.songList")
+            li
+                h2(data-bind="text: letter")
+                button(class="fa fa-2x expand-letter" data-bind="click: $root.menuViewModel.toggleLetter.bind($data), css: { 'fa-caret-down': !expanded(), 'fa-caret-up': expanded }")
+                ul(class="songs" data-bind="foreach: songs, visible: expanded")
+                    li
+                        button(data-bind="text: songTitle, click: $root.changeSong")

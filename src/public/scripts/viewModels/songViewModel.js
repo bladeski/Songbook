@@ -3,11 +3,24 @@ define(['knockout'], function (ko) {
             songTitle: ko.observable('Title'),
             songSubTitle: ko.observable('Subtitle'),
             formattedSong: ko.observableArray(),
+            viewMode: ko.observable(false),
             key: ko.observable(),
             newKey: ko.observable(),
+            originalKey: ko.observable(),
             songDOMContainer: null,
-            keyOptions: ['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
-            keyOptionsAlt: ['A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab']
+            keyOptions: [{key: 'A'},
+                {key: 'A#', altKey: 'Bb'},
+                {key: 'B'},
+                {key: 'C'},
+                {key: 'C#', altKey: 'Db'},
+                {key: 'D'},
+                {key: 'D#', altKey: 'Eb'},
+                {key: 'E'},
+                {key: 'F'},
+                {key: 'F#', altKey: 'Gb'},
+                {key: 'G'},
+                {key: 'G#', altKey: 'Ab'}],
+            capoOptions: ko.observableArray()
         };
 
     function splitChords (song) {
@@ -40,6 +53,25 @@ define(['knockout'], function (ko) {
         return formattedSong;
     }
 
+    songViewModel.originalKey.subscribe(function (newValue) {
+        var options = [],
+            keyIndex = songViewModel.getKeyIndex(newValue);
+
+        songViewModel.keyOptions.forEach(function (key, index) {
+            // var capoKeyIndex = songViewModel.getKeyIndex(key.key);
+
+            if (keyIndex > index) {
+                options[keyIndex - index] = { key: key.key, displayKey: 'Capo ' + (keyIndex - index) + ' - ' + key.key };
+            } else if (keyIndex === index) {
+                options[0] = { key: key.key, displayKey: 'Capo ' + (0) + ' - ' + key.key };
+            } else {
+                options[songViewModel.keyOptions.length - index + keyIndex] = { key: key.key, displayKey: 'Capo ' + (songViewModel.keyOptions.length - index + keyIndex) + ' - ' + key.key };
+            }
+        });
+
+        songViewModel.capoOptions(options);
+    });
+
     songViewModel.spaceChord = function (chord, nextChord) {
         nextChord.style.left = '';
         var rect1 = chord.getBoundingClientRect(),
@@ -58,39 +90,32 @@ define(['knockout'], function (ko) {
     }
 
     songViewModel.updateSong = function (song) {
-        songViewModel.songTitle(song.songTitle ? song.songTitle : songViewModel.songTitle());
-        songViewModel.songSubTitle(song.songSubTitle ? song.songSubTitle : songViewModel.songSubTitle());
-        songViewModel.formattedSong(song.formattedSong ? formatSong(song.formattedSong) : songViewModel.formattedSong());
-        songViewModel.key(song.key ? (songViewModel.getKeyIndex(song.key) >= 0 ? songViewModel.getKeyIndex(song.key) : 0) : songViewModel.key());
+        songViewModel.viewMode(song.viewMode || false);
+        songViewModel.songTitle(song.title ? song.title : '');
+        songViewModel.songSubTitle(song.subTitle ? song.subTitle : '');
+        songViewModel.formattedSong(song.song ? formatSong(song.song) : '');
+        songViewModel.key(song.key ? song.key : 'C');
         songViewModel.newKey(songViewModel.key());
         songViewModel.songDOMContainer = song.songDOMContainer ? song.songDOMContainer : songViewModel.songDOMContainer;
     }
 
     songViewModel.getKeyIndex = function (key) {
-        var keyIndex = songViewModel.keyOptions.findIndex(function (keyOption) {
-                return key === keyOption;
-            });
+        return songViewModel.keyOptions.findIndex(function (keyOption) {
+            return key === keyOption.key || key === keyOption.altKey;
+        });
+    }
 
-        if (keyIndex < 0) {
-            keyIndex = songViewModel.keyOptionsAlt.findIndex(function (keyOption) {
-                return key === keyOption;
-            });
-        }
-
-        return keyIndex;
+    songViewModel.getKeyDisplayText = function (key) {
+        return key.key + ' - Capo ' + songViewModel.getKeyIndex(key.key);
     }
 
     songViewModel.newKey.subscribe(function (newValue) {
-        if (newValue === songViewModel.key() || songViewModel.songDOMContainer === null) {
+        if (!songViewModel.key() || newValue === songViewModel.key() || songViewModel.songDOMContainer === null) {
             return;
         }
 
-        var keyIndex = songViewModel.keyOptions.findIndex(function (key) {
-                return key === songViewModel.key();
-            }),
-            newKeyIndex = songViewModel.keyOptions.findIndex(function (key) {
-                return key === newValue;
-            }),
+        var keyIndex = songViewModel.getKeyIndex(songViewModel.key()),
+            newKeyIndex = songViewModel.getKeyIndex(newValue),
             step = newKeyIndex - keyIndex;
 
         songViewModel.key(newValue);
@@ -113,11 +138,11 @@ define(['knockout'], function (ko) {
                 var newChar = songViewModel.getKeyIndex(chord);
 
                 if (newChar >= 0 && newChar + step >= 0 && newChar + step < songViewModel.keyOptions.length) {
-                    newChord += songViewModel.keyOptions[newChar + step];
+                    newChord += songViewModel.keyOptions[newChar + step].key;
                 } else if (newChar >= 0 && newChar + step < 0) {
-                    newChord += songViewModel.keyOptions[songViewModel.keyOptions.length + newChar + step];
+                    newChord += songViewModel.keyOptions[songViewModel.keyOptions.length + newChar + step].key;
                 } else if (newChar >= 0 && newChar + step >= songViewModel.keyOptions.length) {
-                    newChord += songViewModel.keyOptions[newChar + step - songViewModel.keyOptions.length];
+                    newChord += songViewModel.keyOptions[newChar + step - songViewModel.keyOptions.length].key;
                 } else {
                     newChord += chords[i].innerText[j];
                 }

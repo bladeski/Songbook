@@ -43,7 +43,8 @@ function processSong(song) {
             .split('{key:' + key + '}').join('').trim()
             .replace(/{soc}/g, '{soc}**CHORUS**'),
         splitSong = songData.split('{soc}'),//songData.split(/\n\s*\n/g),
-        processedSong = [];
+        processedSong = [],
+        returnData;
 
         splitSong.forEach(function (section) {
             var containsChorus = section.substr(0, 10) === '**CHORUS**',
@@ -79,12 +80,14 @@ function processSong(song) {
             });
         });
 
-    return {
+    returnData = {
         title: title.trim(),
         subtitle: subtitle.trim(),
         key: key.trim(),
         song: processedSong
     };
+
+    return JSON.stringify(returnData);
 }
 
 fs.readdir(path, function(err, items) {

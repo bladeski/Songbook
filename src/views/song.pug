@@ -3,7 +3,14 @@ div(id="song-section" class="container-fluid")
         h2
             span(data-bind="text: songViewModel.songTitle")
             small(data-bind="text: songViewModel.songSubTitle")
-        select(data-bind="value: songViewModel.newKey, options: songViewModel.keyOptions")
+        label(for="key-select" data-bind="visible: songViewModel.viewMode") Key: 
+        select(id="key-select" data-bind="value: songViewModel.newKey, options: songViewModel.keyOptions, optionsValue: 'key', optionsText: 'key', visible: songViewModel.viewMode")
         
+        span(data-bind="visible: songViewModel.viewMode") Key: 
+        span(data-bind="text: songViewModel.originalKey, visible: songViewModel.viewMode")
+        
+        label(for="capo-select") Capo: 
+        select(id="capo-select" data-bind="value: songViewModel.newKey, options: songViewModel.capoOptions, optionsValue: 'key', optionsText: 'displayKey'")
+                
         div(id="song" data-bind="foreach: songViewModel.formattedSong")
             div(class="song-section" data-bind="html: data, css: { 'song-chorus': type === 'chorus' }")
