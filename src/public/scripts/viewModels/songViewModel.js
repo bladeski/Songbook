@@ -61,7 +61,7 @@ define(['knockout'], function (ko) {
         songViewModel.songTitle(song.songTitle ? song.songTitle : songViewModel.songTitle());
         songViewModel.songSubTitle(song.songSubTitle ? song.songSubTitle : songViewModel.songSubTitle());
         songViewModel.formattedSong(song.formattedSong ? formatSong(song.formattedSong) : songViewModel.formattedSong());
-        songViewModel.key(song.key ? (songViewModel.getKeyIndex(song.key) >= 0 ? songViewModel.getKeyIndex(song.key) : 0) : songViewModel.key());
+        songViewModel.key(song.key ? (songViewModel.getKeyIndex(song.key) >= 0 ? songViewModel.keyOptions[songViewModel.getKeyIndex(song.key)] : 0) : songViewModel.key());
         songViewModel.newKey(songViewModel.key());
         songViewModel.songDOMContainer = song.songDOMContainer ? song.songDOMContainer : songViewModel.songDOMContainer;
     }
