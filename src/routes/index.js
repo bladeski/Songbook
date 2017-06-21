@@ -31,6 +31,57 @@ function getSong(name, callback) {
     });
 }
 
+function processSection (section) {
+
+    var sectionLines = (section + '').split('\n'),
+        newSectionLines = [];
+
+    sectionLines.forEach(function (line) {
+
+        var splitLine = line.split('['),
+            newLine = [];
+
+        splitLine.forEach(function (split) {
+
+            if (!split) {
+                return;
+            }
+            var isChord = split.substr(0, 9) === '**CHORD**',
+                chord;
+
+            if (isChord) {
+                var data = split.split(']');
+
+                newLine.push({
+                    type: 'chord',
+                    data: data[0].substr(9).trim()
+                }, {
+                    type: 'chord-space',
+                    data: ''
+                });
+
+                if (data[1] && data[1].trim()) {
+                    newLine.push({
+                        type: 'text',
+                        data: data[1]
+                    });
+                }
+            } else {
+
+                if (split.trim()) {
+                    newLine.push({
+                        type: 'text',
+                        data: split
+                    });
+                }
+            }
+        });
+        newSectionLines.push(newLine);
+    });
+
+    return newSectionLines;
+}
+
 function processSong(song) {
     var titleSplit = song.split('{title:'),
         title = titleSplit != song ? titleSplit[titleSplit.length - 1].split('}')[0] : '',
@@ -41,8 +92,9 @@ function processSong(song) {
         songData = song.split('{title:' + title + '}').join('')
             .split('{subtitle:' + subtitle + '}').join('')
             .split('{key:' + key + '}').join('').trim()
-            .replace(/{soc}/g, '{soc}**CHORUS**'),
-        splitSong = songData.split('{soc}'),//songData.split(/\n\s*\n/g),
+            .replace(/{soc}/g, '{soc}**CHORUS**')
+            .replace(/\[/g, '[**CHORD**'),
+        splitSong = songData.split('{soc}'),
         processedSong = [],
         returnData;
 
@@ -59,10 +111,9 @@ function processSong(song) {
                 if (data) {
                     processedSong.push({
                         type: 'chorus',
-                        data: data
+                        data: processSection(data)
                     });
                 }
-
                 section = splitChorus[1];
             }
 
@@ -74,7 +125,7 @@ function processSong(song) {
                 if (data) {
                     processedSong.push({
                         type: 'verse',
-                        data: data
+                        data: processSection(data)
                     });
                 }
             });

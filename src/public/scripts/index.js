@@ -84,9 +84,9 @@
             //socket.emit('Director Change Song', data);
         }
 
-        viewModel.songViewModel.newKey.subscribe(function (newValue) {
-
-        });
+        // viewModel.songViewModel.newKey.subscribe(function (newValue) {
+        //
+        // });
 
         viewModel.changeSong = function (data) {
 
